@@ -1,7 +1,9 @@
 import 'taro-ui/dist/style/index.scss' 
 import Taro, { Component } from '@tarojs/taro'
+import { Provider } from '@tarojs/redux'
 import Index from './pages/index/index'
 import './app.less'
+import configStore from './store'
 
 
 // 如果需要在 h5 环境中开启 React Devtools
@@ -9,6 +11,8 @@ import './app.less'
 // if (process.env.NODE_ENV !== 'production' && process.env.TARO_ENV === 'h5')  {
 //   require('nerv-devtools')
 // }
+
+const store = configStore
 
 class App extends Component {
 
@@ -23,19 +27,20 @@ class App extends Component {
   config = {
     pages: [
       'pages/index/index',
+      'pages/account/index',
       'pages/login/index',
     ],
     tabBar: {
       list: [
         {
           text: 'Trending',
-          pagePath: 'pages/login/index',
+          pagePath: 'pages/index/index',
           iconPath: './assets/images/tab-trending.png',
           selectedIconPath: './assets/images/tab-trending-s.png'
         },
         {
           text: 'Me',
-          pagePath: 'pages/login/index',
+          pagePath: 'pages/account/index',
           iconPath: './assets/images/tab-github.png',
           selectedIconPath: './assets/images/tab-github-s.png'
         }
@@ -52,12 +57,13 @@ class App extends Component {
       navigationBarTextStyle: 'black'
     }
   }
-
   // 在 App 类中的 render() 函数没有实际作用
   // 请勿修改此函数
   render () {
     return (
-      <Index />
+      <Provider store={store}>
+        <Index />
+      </Provider>
     )
   }
 }

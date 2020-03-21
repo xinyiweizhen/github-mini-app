@@ -2,7 +2,7 @@ import Taro, { useState } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
 import { AtInput, AtButton } from 'taro-ui'
 import { base64_encode } from '../../utils/base64'
-import request from '../../api/request'
+import { getUserInfoActions } from '../../store/actions/user'
 import './index.less'
 
 const Login = ()=> {
@@ -13,6 +13,8 @@ const Login = ()=> {
       username: '',
       password: ''
   })
+
+  const dispatch = useDispatch()
 
   const setParams = (key, entry)=>{
     _setParams({
@@ -40,11 +42,11 @@ const Login = ()=> {
         }
     }
     Taro.showLoading({title: 'Login.....'})
-    request.get('/user').then((res)=>{
-        console.log(res.data);
-        Taro.hideLoading()
+    getUserInfoActions().then(()=>{
+      Taro.hideLoading()
+      Taro.navigateBack()
     }).catch(()=>{
-        Taro.hideLoading()
+      Taro.hideLoading()
     })
   }
 
@@ -53,7 +55,7 @@ const Login = ()=> {
       <View className='login-bg'>
         <Image className='logo' 
           mode='aspectFill' 
-          src='../../assets/images/octocat.png'
+          src={require('../../assets/images/octocat.png')}
         />
         <Text className='login-bg-text'>Sign in to GitHub</Text>
       </View>
