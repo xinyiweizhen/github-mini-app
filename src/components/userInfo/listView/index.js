@@ -1,26 +1,45 @@
 import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
 import { AtIcon } from 'taro-ui'
+import { isFunction } from 'lodash'
+import PropTypes from 'prop-types'
 import './index.less'
 
 const ListView =  (props)=> {
 
-    const { list } = props
+  const { list } = props
 
   return (
-    <View className='list_view'>
-    {
-       list && list.map((item)=>(
-        <View className='list' key={item.title}>
-            <View className='list_title'>{item.title}</View>
-            <View className='list_content'>{ item.value ? item.value : '--'}</View>
-            { item.displayIcon &&  <AtIcon prefixClass='ion' value='ios-arrow-forward' size='18' color='#7f7f7f' />}
-        </View>
-       )) 
-    }
-  </View>
+    <View>
+      {
+        list && list.map((array, index)=>(
+          <View className='list-view' key={index}>
+            { array && array.map((item)=>(
+                <View className='list' key={item.title} onClick={isFunction(item.onClick) ? item.onClick : null}>
+                    <View className='list-title'>{item.title}</View>
+                    { item.displayIcon ? 
+                      <AtIcon prefixClass='ion' value='ios-arrow-forward' size='18' color='#7f7f7f' /> :
+                      <View className='list-content'>{ item.value ? item.value : '--'}</View>
+                    }
+                </View>
+              ))}
+          </View>
+        ))
+      }
+    </View>
   )
 }
 
+// ListView.propTypes = {
+//   list: PropTypes.shape({
+//     title: PropTypes.string,
+//     value: PropTypes.string,
+//     displayIcon: PropTypes.bool,
+//     onClick: PropTypes.func
+//   })
+// }
+// ListView.defaultProps = {
+//   list: null
+// }
 
 export default ListView

@@ -1,18 +1,17 @@
-import Taro, { useState, useEffect } from '@tarojs/taro'
+import Taro, { useState, useEffect, usePullDownRefresh, useDidShow } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
-import { AtButton, AtAvatar } from 'taro-ui'
-import ListView from '../../components/userInfo/listView'
-// eslint-disable-next-line import/first
+import { AtButton, AtAvatar, AtIcon } from 'taro-ui'
 import { useSelector } from '@tarojs/redux'
+import userAtions from '../../store/actions/user'
+import ListView from '../../components/userInfo/listView'
 import { hasLogin } from '../../utils/hasLogin'
-import { getUserInfoActions } from '../../store/actions/user'
 import './index.less'
 
 const Index =  ()=> {
 
+  const [isLogin, setIsLogin] = useState(false)
 
-
-    const userInfo = useSelector(state => state.user.userInfo)
+  const userInfo = useSelector(state=> state.user.userInfo)
 
     const goToLogin = ()=>{
         Taro.navigateTo({
@@ -21,65 +20,124 @@ const Index =  ()=> {
     }
 
     useEffect(()=>{
-      Taro.showLoading({title: 'Loading...'})
       getUserInfo()
     }, [])
 
+    useDidShow(()=>{
+      getUserInfo()
+    })
 
+    // 下拉刷新
+    usePullDownRefresh(()=>{
+      getUserInfo()
+    })
+
+    // 获取用户信息
     const getUserInfo = ()=>{
+      Taro.showLoading({title: 'Loading...'})
       if(hasLogin()){
-        getUserInfoActions().then(()=>{
-          Taro.hideLoading()
-          Taro.stopPullDownRefresh()
+        userAtions.getUserInfo().then(res =>{
+          if(!res){ // 请求失败返回underfine
+            Taro.hideLoading()
+            Taro.showToast({
+              title: 'Login failed please try again',
+              icon: 'none',
+            })
+            Taro.stopPullDownRefresh()
+            setIsLogin(false)
+          }else{
+            Taro.hideLoading()
+            Taro.stopPullDownRefresh()
+            setIsLogin(true)
+          }
         })
       }else{
         Taro.hideLoading()
         Taro.stopPullDownRefresh()
+        setIsLogin(false)
       }
     }
 
     const items = [
-      {
-        title: 'Email',
-        value: userInfo.email.length > 0 ? userInfo.email : '--',
-        displayIcon: false
-      },
-      {
-        title: 'Blog',
-        value: userInfo.blog.length > 0 ? userInfo.blog : '--',
-        displayIcon: false
-      },
-      {
-        title: 'Company',
-        value: userInfo.company.length > 0 ? userInfo.company : '--',
-        displayIcon: false
-      },
-      {
-        title: 'Localtion',
-        value: userInfo.location.length > 0 ? userInfo.location : '--',
-        displayIcon: false
-      }
-    ]
+      [
+        {
+          title: 'Starred Repos',
+          displayIcon: true
+        },
+        {
+          title: 'Issues',
+          displayIcon: true
+        }
+      ],
+      [
+        {
+          title: 'Email',
+          value: userInfo ? userInfo.email : '--',
+          displayIcon: false
+        },
+        {
+          title: 'Blog',
+          value: userInfo ? userInfo.blog : '--',
+          displayIcon: false
+        },
+        {
+          title: 'Company',
+          value: userInfo ? userInfo.company : '--',
+          displayIcon: false
+        },
+        {
+          title: 'Localtion',
+          value: userInfo ? userInfo.location : '--',
+          displayIcon: false
+        }
+      ],
+      [
+        {
+          title: 'About',
+          displayIcon: true
+        }
+      ]
+    ]  
+    
 
   return (
-    <View className='page'>
+    <View>
       {
-        hasLogin() ? 
-        <View>
-          <View className='user_info'>
-                <AtAvatar className='avatar' circle image={userInfo.avatar_url}/>
-                {
-                  userInfo.name.length > 0 &&
-                  <Text className='username'>{userInfo.name}</Text>
-                }
-                <View className='login_name'>@{userInfo.login}</View>
+        isLogin && userInfo ? 
+        <View  className='page'>
+          <Image  className='account-bg' src={require('../../assets/images/account_bg.png')} />
+          <View className='user-info'>
+            <AtAvatar className='avatar' size='large' text={userInfo.login} circle image={userInfo.avatar_url} />
+            {
+              userInfo.name.length > 0 &&
+              <Text className='username'>{userInfo.name}</Text>
+            }
+            <View className='login-name'>@{userInfo.login}</View>
+          </View>
+          <View className='info-view'> 
+            {userInfo.bio && <View className='bio'>{userInfo.bio}</View>}
+            <View className='item-view'>
+              <View className='item' >
+                <View className='title'>{userInfo && Number(userInfo.public_repos + userInfo.owned_private_repos)}</View>
+                <View className='desc'>Repos</View>
               </View>
-          <ListView
-            list={items}
-          />
+              <View className='line' />
+              <View className='item' >
+                <View className='title'>{userInfo && userInfo.followers}</View>
+                <View className='desc'>Followers</View>
+              </View>
+              <View className='line' />
+              <View className='item' >
+                <View className='title'>{userInfo && userInfo.following}</View>
+                <View className='desc'>Following</View>
+              </View>
+            </View>
+          </View>
+          <ListView list={items} />
+          <View className='page-bottom'/>
         </View>
         :
-        <View>
+        <View  className='page'>
           <Image mode='aspectFit'
             className='logo'
             src={require('../../assets/images/octocat.png')} 
@@ -91,17 +149,10 @@ const Index =  ()=> {
           </AtButton>
         </View>
       }
-      
     </View>
   )
 }
 
-/**
- * 
- * 注意
- *    由于我们把 Index 从类组件改造成了函数组件，所以挂载 config 要在 Index 组件定义之后直接挂载在 Index 上面。
- * 
- */
 Index.config = {
   navigationBarBackgroundColor: '#24292e',
   navigationBarTextStyle: 'white',

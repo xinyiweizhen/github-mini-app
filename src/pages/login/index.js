@@ -2,8 +2,9 @@ import Taro, { useState } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
 import { AtInput, AtButton } from 'taro-ui'
 import { base64_encode } from '../../utils/base64'
-import { getUserInfoActions } from '../../store/actions/user'
+import userAtions from '../../store/actions/user'
 import './index.less'
+import { HTTP_STATUS } from '../../constant/status'
 
 const Login = ()=> {
   const [tabKey, setTabKey] = useState(0)
@@ -13,8 +14,6 @@ const Login = ()=> {
       username: '',
       password: ''
   })
-
-  const dispatch = useDispatch()
 
   const setParams = (key, entry)=>{
     _setParams({
@@ -42,11 +41,19 @@ const Login = ()=> {
         }
     }
     Taro.showLoading({title: 'Login.....'})
-    getUserInfoActions().then(()=>{
+    userAtions.getUserInfo().then(res=>{
       Taro.hideLoading()
-      Taro.navigateBack()
+      if(res.statusCode === HTTP_STATUS.SUCCESS){
+        Taro.navigateBack()
+      }else{
+        Taro.showToast({
+          title: res.data.message,
+          icon: 'none'
+        })
+        Taro.setStorageSync('Authorization', '')
+      }
     }).catch(()=>{
-      Taro.hideLoading()
+
     })
   }
 

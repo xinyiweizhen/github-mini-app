@@ -1,7 +1,9 @@
-import 'taro-ui/dist/style/index.scss' 
 import Taro, { Component } from '@tarojs/taro'
 import { Provider } from '@tarojs/redux'
 import Index from './pages/index/index'
+import './assets/ionicons/css/ionicons.min.css'
+// eslint-disable-next-line import/first
+import 'taro-ui/dist/style/index.scss' 
 import './app.less'
 import configStore from './store'
 
