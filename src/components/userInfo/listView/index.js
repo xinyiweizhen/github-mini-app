@@ -30,16 +30,11 @@ const ListView =  (props)=> {
   )
 }
 
-// ListView.propTypes = {
-//   list: PropTypes.shape({
-//     title: PropTypes.string,
-//     value: PropTypes.string,
-//     displayIcon: PropTypes.bool,
-//     onClick: PropTypes.func
-//   })
-// }
-// ListView.defaultProps = {
-//   list: null
-// }
+ListView.propTypes = {
+  list: PropTypes.array
+}
+ListView.defaultProps = {
+  list: null
+}
 
 export default ListView

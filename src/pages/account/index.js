@@ -19,10 +19,6 @@ const Index =  ()=> {
         })
     }
 
-    useEffect(()=>{
-      getUserInfo()
-    }, [])
-
     useDidShow(()=>{
       getUserInfo()
     })
@@ -117,7 +113,7 @@ const Index =  ()=> {
           <View className='info-view'> 
             {userInfo.bio && <View className='bio'>{userInfo.bio}</View>}
             <View className='item-view'>
-              <View className='item' >
+              <View className='item' onClick={()=> Taro.navigateTo({url: `/pages/repos/index?url=${encodeURI(userInfo.repos_url)}`})}>
                 <View className='title'>{userInfo && Number(userInfo.public_repos + userInfo.owned_private_repos)}</View>
                 <View className='desc'>Repos</View>
               </View>
