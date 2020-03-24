@@ -24,7 +24,7 @@ const RepoItem =  (props)=> {
         {is_bottom_show &&
         <View className='repo-bottom'>
           {
-            item.language.length > 0 &&
+            item.language &&
             <View className='repo-number-item'>
               <AtIcon prefixClass='ion' value='ios-radio-button-on' size='16' color='#7f7f7f' />
               <View className='repo-number-title'>{item.language}</View>
@@ -47,7 +47,7 @@ const RepoItem =  (props)=> {
         </View>
         }
         <View className='update-view'>
-          <AtIcon prefixClass='ion' value='ios-trending-up' size='15' color='#ff4949' />
+          <AtIcon prefixClass='ion' value='ios-trending-up' size='18' color='#ff4949' />
           <View className='update_date'>updated{update_time}</View>
         </View>
       </View>
@@ -58,7 +58,14 @@ RepoItem.propTypes = {
   item: PropTypes.object
 }
 RepoItem.defaultProps = {
-  item: null
+  item: {
+    language: '',
+    updated_at: '',
+    full_name: '',
+    stargazers_count: '',
+    forks_count: '',
+    description: ''
+  }
 }
 
 export default RepoItem

@@ -24,11 +24,12 @@ const Login = ()=> {
 
   const handleSubmit = ()=>{
     if(tabKey === 0){
-        !params.token ? 
+        !params.token ?
         Taro.showToast({
             title: 'Please input Token',
             icon: 'none'
         }) : Taro.setStorageSync('Authorization', `token ${params.token}`)
+
     }else{
         if(!params.username || !params.password){
             Taro.showToast({
@@ -60,8 +61,8 @@ const Login = ()=> {
   return (
     <View className='page'>
       <View className='login-bg'>
-        <Image className='logo' 
-          mode='aspectFill' 
+        <Image className='logo'
+          mode='aspectFill'
           src={require('../../assets/images/octocat.png')}
         />
         <Text className='login-bg-text'>Sign in to GitHub</Text>
@@ -69,7 +70,7 @@ const Login = ()=> {
       <View className='login-content'>
         <View className='switch-view'>
           <View className={tabKey === 0 ? 'selected-title' : 'normal-title'}
-            onClick={()=> setTabKey(0)} 
+            onClick={()=> setTabKey(0)}
           >
             Token
           </View>

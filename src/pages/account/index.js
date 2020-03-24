@@ -1,9 +1,9 @@
 import Taro, { useState, useEffect, usePullDownRefresh, useDidShow } from '@tarojs/taro'
 import { View, Image, Text } from '@tarojs/components'
-import { AtButton, AtAvatar, AtIcon } from 'taro-ui'
+import { AtButton, AtAvatar } from 'taro-ui'
 import { useSelector } from '@tarojs/redux'
 import userAtions from '../../store/actions/user'
-import ListView from '../../components/userInfo/listView'
+import ListView from '../../components/account/listView'
 import { hasLogin } from '../../utils/hasLogin'
 import './index.less'
 
@@ -93,13 +93,13 @@ const Index =  ()=> {
           displayIcon: true
         }
       ]
-    ]  
-    
+    ]
+
 
   return (
     <View>
       {
-        isLogin && userInfo ? 
+        isLogin && userInfo ?
         <View  className='page'>
           <Image  className='account-bg' src={require('../../assets/images/account_bg.png')} />
           <View className='user-info'>
@@ -110,10 +110,10 @@ const Index =  ()=> {
             }
             <View className='login-name'>@{userInfo.login}</View>
           </View>
-          <View className='info-view'> 
+          <View className='info-view'>
             {userInfo.bio && <View className='bio'>{userInfo.bio}</View>}
             <View className='item-view'>
-              <View className='item' onClick={()=> Taro.navigateTo({url: `/pages/repos/index?url=${encodeURI(userInfo.repos_url)}`})}>
+              <View className='item' onClick={()=> Taro.navigateTo({url: `/pages/repos/index?url=https://api.github.com/users/fjc0k/repos`})}>
                 <View className='title'>{userInfo && Number(userInfo.public_repos + userInfo.owned_private_repos)}</View>
                 <View className='desc'>Repos</View>
               </View>
@@ -130,13 +130,13 @@ const Index =  ()=> {
             </View>
           </View>
           <ListView list={items} />
-          <View className='page-bottom'/>
+          <View className='page-bottom' />
         </View>
         :
         <View  className='page'>
           <Image mode='aspectFit'
             className='logo'
-            src={require('../../assets/images/octocat.png')} 
+            src={require('../../assets/images/octocat.png')}
           />
           <AtButton className='login-button'
             onClick={goToLogin}
