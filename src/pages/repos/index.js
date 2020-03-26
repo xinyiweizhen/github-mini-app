@@ -3,24 +3,21 @@ import { View } from '@tarojs/components'
 import RepoItem  from '../../components/repos/repoItem'
 import LoadMore from "../../components/common/loadMore";
 import request from '../../api/request'
+import { REFRESH_STATUS, PRE_PAGE } from '../../constant/global'
 import './index.less'
 
-const PER_PAGE = 10
-const NORMAL = 0
-const REFRESHING = 1
-const NO_MORE_DATA = 2
 
 const Index =  ()=> {
     const [reposList, setReposList] = useState([])
 
     const [params, setParams] = useState({
       page: 1,
-      per_page: PER_PAGE,
+      per_page: PRE_PAGE,
       type: 'owner',
       sort: 'updated'
     })
 
-    const [status, setStatus] = useState(NORMAL)
+    const [status, setStatus] = useState(REFRESH_STATUS.NORMAL)
 
     const router = useRouter()
 
@@ -35,19 +32,20 @@ const Index =  ()=> {
           }else {
             setReposList([...reposList, ...res.data])
           }
-          setStatus( res.data.length < PER_PAGE ?  NO_MORE_DATA : NORMAL )
+          setStatus( res.data.length < PRE_PAGE ?  REFRESH_STATUS.NO_MORE_DATA : REFRESH_STATUS.NORMAL )
+        }).finally(()=>{
+          Taro.stopPullDownRefresh()
+          Taro.hideLoading()
         })
-        Taro.stopPullDownRefresh()
-        Taro.hideLoading()
       }, [params])
     // 下拉刷新
     usePullDownRefresh(()=>{
-      setStatus(REFRESHING)
+      setStatus(REFRESH_STATUS.REFRESHING)
       setParams((preParams)=> ({...preParams, page : 1}))
     })
     // 上拉加载更多
     useReachBottom( ()=>{
-        if(status !== NO_MORE_DATA){
+        if(status !== REFRESH_STATUS.NO_MORE_DATA){
             setParams((preParams)=> ({...preParams, page : preParams.page + 1}))
         }
     })

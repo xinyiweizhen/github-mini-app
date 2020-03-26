@@ -9,10 +9,55 @@ import './index.less'
 
 const Index =  ()=> {
 
-  const [isLogin, setIsLogin] = useState(false)
+  const [isLogin, setIsLogin] = useState(true)
 
-  const userInfo = useSelector(state=> state.user.userInfo)
+  // const userInfo = useSelector(state=> state.user.userInfo)
 
+  const userInfo = {
+    "login": "xinyiweizhen",
+    "id": 32378188,
+    "node_id": "MDQ6VXNlcjMyMzc4MTg4",
+    "avatar_url": "https://avatars2.githubusercontent.com/u/32378188?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/xinyiweizhen",
+    "html_url": "https://github.com/xinyiweizhen",
+    "followers_url": "https://api.github.com/users/xinyiweizhen/followers",
+    "following_url": "https://api.github.com/users/xinyiweizhen/following{/other_user}",
+    "gists_url": "https://api.github.com/users/xinyiweizhen/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/xinyiweizhen/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/xinyiweizhen/subscriptions",
+    "organizations_url": "https://api.github.com/users/xinyiweizhen/orgs",
+    "repos_url": "https://api.github.com/users/xinyiweizhen/repos",
+    "events_url": "https://api.github.com/users/xinyiweizhen/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/xinyiweizhen/received_events",
+    "type": "User",
+    "site_admin": false,
+    "name": null,
+    "company": null,
+    "blog": "",
+    "location": null,
+    "email": null,
+    "hireable": null,
+    "bio": null,
+    "public_repos": 5,
+    "public_gists": 0,
+    "followers": 0,
+    "following": 0,
+    "created_at": "2017-09-29T01:30:04Z",
+    "updated_at": "2020-03-25T01:43:42Z",
+    "private_gists": 0,
+    "total_private_repos": 4,
+    "owned_private_repos": 4,
+    "disk_usage": 10195,
+    "collaborators": 0,
+    "two_factor_authentication": false,
+    "plan": {
+      "name": "free",
+      "space": 976562499,
+      "collaborators": 0,
+      "private_repos": 10000
+    }
+  }
     const goToLogin = ()=>{
         Taro.navigateTo({
             url: '/pages/login/index'
@@ -20,12 +65,12 @@ const Index =  ()=> {
     }
 
     useDidShow(()=>{
-      getUserInfo()
+      // getUserInfo()
     })
 
     // 下拉刷新
     usePullDownRefresh(()=>{
-      getUserInfo()
+      // getUserInfo()
     })
 
     // 获取用户信息
@@ -58,7 +103,8 @@ const Index =  ()=> {
       [
         {
           title: 'Starred Repos',
-          displayIcon: true
+          displayIcon: true,
+          onClick: ()=>{Taro.navigateTo({url: '/pages/repos/index?url='+ encodeURI(`/user/starred`)})}
         },
         {
           title: 'Issues',
@@ -101,14 +147,15 @@ const Index =  ()=> {
       {
         isLogin && userInfo ?
         <View  className='page'>
-          <Image  className='account-bg' src={require('../../assets/images/account_bg.png')} />
-          <View className='user-info'>
-            <AtAvatar className='avatar' size='large' text={userInfo.login} circle image={userInfo.avatar_url} />
-            {
-              userInfo.name.length > 0 &&
-              <Text className='username'>{userInfo.name}</Text>
-            }
-            <View className='login-name'>@{userInfo.login}</View>
+          <View  className='account-bg'  >
+            <View className='user-info'>
+              <AtAvatar className='avatar' size='large' text={userInfo.login} circle image={userInfo.avatar_url} />
+              {
+                userInfo.name.length > 0 &&
+                <Text className='username'>{userInfo.name}</Text>
+              }
+              <View className='login-name'>@{userInfo.login}</View>
+            </View>
           </View>
           <View className='info-view'>
             {userInfo.bio && <View className='bio'>{userInfo.bio}</View>}
@@ -118,12 +165,12 @@ const Index =  ()=> {
                 <View className='desc'>Repos</View>
               </View>
               <View className='line' />
-              <View className='item' >
+              <View className='item' onClick={()=> Taro.navigateTo({url: `/pages/follow/index?type=followers`})}>
                 <View className='title'>{userInfo && userInfo.followers}</View>
                 <View className='desc'>Followers</View>
               </View>
               <View className='line' />
-              <View className='item' >
+              <View className='item' onClick={()=> Taro.navigateTo({url: `/pages/follow/index?type=following&username=apersonw`})}>
                 <View className='title'>{userInfo && userInfo.following}</View>
                 <View className='desc'>Following</View>
               </View>
