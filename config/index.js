@@ -1,3 +1,4 @@
+const path = require('path')
 const config = {
   projectName: 'github-mini',
   date: '2020-3-20',

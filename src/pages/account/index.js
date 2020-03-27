@@ -2,9 +2,9 @@ import Taro, { useState, useEffect, usePullDownRefresh, useDidShow } from '@taro
 import { View, Image, Text } from '@tarojs/components'
 import { AtButton, AtAvatar } from 'taro-ui'
 import { useSelector } from '@tarojs/redux'
-import userAtions from '../../store/actions/user'
 import ListView from '../../components/account/listView'
 import { hasLogin } from '../../utils/hasLogin'
+import userAtions from '../../store/actions/user'
 import './index.less'
 
 const Index =  ()=> {
@@ -104,11 +104,12 @@ const Index =  ()=> {
         {
           title: 'Starred Repos',
           displayIcon: true,
-          onClick: ()=>{Taro.navigateTo({url: '/pages/repos/index?url='+ encodeURI(`/user/starred`)})}
+          onClick: ()=>{Taro.navigateTo({url: '/pages/reposlist/index?url=' + encodeURI(`/user/starred`)})}
         },
         {
           title: 'Issues',
-          displayIcon: true
+          displayIcon: true,
+          onClick: ()=>{Taro.navigateTo({url: '/pages/issuelist/index?url=' + encodeURI(`/user/issues`)})}
         }
       ],
       [
@@ -160,7 +161,7 @@ const Index =  ()=> {
           <View className='info-view'>
             {userInfo.bio && <View className='bio'>{userInfo.bio}</View>}
             <View className='item-view'>
-              <View className='item' onClick={()=> Taro.navigateTo({url: `/pages/repos/index?url=https://api.github.com/users/fjc0k/repos`})}>
+              <View className='item' onClick={()=> Taro.navigateTo({url: `/pages/reposlist/index?url=https://api.github.com/users/fjc0k/repos`})}>
                 <View className='title'>{userInfo && Number(userInfo.public_repos + userInfo.owned_private_repos)}</View>
                 <View className='desc'>Repos</View>
               </View>

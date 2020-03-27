@@ -77,11 +77,7 @@ const Index =  ()=> {
         {
           title: 'Starred Repos',
           displayIcon: true,
-          onClick: ()=>{Taro.navigateTo({url: `/pages/repos/index?url=/users/${encodeURI(developerInfo.login)}/starred`})}
-        },
-        {
-          title: 'Issues',
-          displayIcon: true
+          onClick: ()=>{Taro.navigateTo({url: `/pages/reposlist/index?url=/users/${encodeURI(developerInfo.login)}/starred`})}
         }
       ],
       [
@@ -122,7 +118,7 @@ const Index =  ()=> {
           <View className='info-view'>
             {developerInfo.bio && <View className='bio'>{developerInfo.bio}</View>}
             <View className='item-view'>
-              <View className='item' onClick={()=> Taro.navigateTo({url: `/pages/repos/index?url=${encodeURI(developerInfo.repos_url)}`})}>
+              <View className='item' onClick={()=> Taro.navigateTo({url: `/pages/reposlist/index?url=${encodeURI(developerInfo.repos_url)}`})}>
                 <View className='title'>{Number(developerInfo.public_repos) || 0}</View>
                 <View className='desc'>Repos</View>
               </View>
