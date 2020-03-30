@@ -17,10 +17,11 @@ const ListView =  (props)=> {
             { array && array.map((item)=>(
                 <View className='list' key={item.title} onClick={isFunction(item.onClick) ? item.onClick : null}>
                     <View className='list-title'>{item.title}</View>
-                    { item.displayIcon ? 
-                      <AtIcon prefixClass='ion' value='ios-arrow-forward' size='18' color='#7f7f7f' /> :
-                      <View className='list-content'>{ item.value ? item.value : '--'}</View>
-                    }
+                    <View className='list-content'>
+                      { item.tag && <View className='tag'>{item.tag}</View>}
+                      { item.value && <View className='content'>{item.value}</View> }
+                      { item.icon && <AtIcon prefixClass='ion' value='ios-arrow-forward' size='18' color='#7f7f7f' /> }
+                    </View>
                 </View>
               ))}
           </View>
@@ -31,10 +32,10 @@ const ListView =  (props)=> {
 }
 
 ListView.propTypes = {
-  list: PropTypes.array
+  list: PropTypes.array,
 }
 ListView.defaultProps = {
-  list: null
+  list: null,
 }
 
 export default ListView

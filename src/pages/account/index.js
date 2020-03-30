@@ -103,12 +103,12 @@ const Index =  ()=> {
       [
         {
           title: 'Starred Repos',
-          displayIcon: true,
+          icon: true,
           onClick: ()=>{Taro.navigateTo({url: '/pages/reposlist/index?url=' + encodeURI(`/user/starred`)})}
         },
         {
           title: 'Issues',
-          displayIcon: true,
+          icon: true,
           onClick: ()=>{Taro.navigateTo({url: '/pages/issuelist/index?url=' + encodeURI(`/user/issues`)})}
         }
       ],
@@ -116,28 +116,24 @@ const Index =  ()=> {
         {
           title: 'Email',
           value: userInfo ? userInfo.email : '--',
-          displayIcon: false
         },
         {
           title: 'Blog',
           value: userInfo ? userInfo.blog : '--',
-          displayIcon: false
         },
         {
           title: 'Company',
           value: userInfo ? userInfo.company : '--',
-          displayIcon: false
         },
         {
           title: 'Localtion',
           value: userInfo ? userInfo.location : '--',
-          displayIcon: false
         }
       ],
       [
         {
           title: 'About',
-          displayIcon: true
+          icon: true,
         }
       ]
     ]

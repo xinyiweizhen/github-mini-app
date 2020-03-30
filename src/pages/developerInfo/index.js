@@ -76,7 +76,7 @@ const Index =  ()=> {
       [
         {
           title: 'Starred Repos',
-          displayIcon: true,
+          icon: true,
           onClick: ()=>{Taro.navigateTo({url: `/pages/reposlist/index?url=/users/${encodeURI(developerInfo.login)}/starred`})}
         }
       ],
@@ -84,22 +84,18 @@ const Index =  ()=> {
         {
           title: 'Email',
           value: developerInfo ? developerInfo.email : '--',
-          displayIcon: false
         },
         {
           title: 'Blog',
           value: developerInfo ? developerInfo.blog : '--',
-          displayIcon: false
         },
         {
           title: 'Company',
           value: developerInfo ? developerInfo.company : '--',
-          displayIcon: false
         },
         {
           title: 'Localtion',
           value: developerInfo ? developerInfo.location : '--',
-          displayIcon: false
         }
       ]
     ]

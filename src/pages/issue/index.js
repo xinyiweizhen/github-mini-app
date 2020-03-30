@@ -44,7 +44,7 @@ const Index =  ()=> {
       }else {
         setIssueCommentList([...issueCommentList, ...res.data])
       }
-      
+
     }).finally(()=>{
       Taro.stopPullDownRefresh()
       Taro.hideLoading()
@@ -54,7 +54,7 @@ const Index =  ()=> {
   return (
     <View className='page'>
         <View className='title-view'>
-          <Text className='title'>{`#${issueInfo.number} ${issueInfo.title}`}</Text>
+          <Text className='title'>{ Object.keys(issueInfo).length > 0  && `#${issueInfo.number} ${issueInfo.title}`}</Text>
           {
             issueInfo.body ? (
               <View className='markdown'>

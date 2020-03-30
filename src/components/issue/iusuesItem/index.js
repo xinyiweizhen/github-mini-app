@@ -16,7 +16,7 @@ const IssuesItem =  (props)=> {
       <AtIcon 
         prefixClass='ion'
         size='20'
-        color='#ff4949'
+        color={item.state === 'open' ? '#ff4949' : '#cb2431'}
         value={item.state === 'open' ? 'ios-information-circle-outline' : 'ios-checkmark-circle-outline'}
       />
       <View className='issue-details'>

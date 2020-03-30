@@ -67,7 +67,9 @@ const Index =  ()=> {
     <View className='page'>
       {
           reposList && reposList.map((item, index)=>(
-            <RepoItem item={item} key={index} />
+            <View key={index} onClick={()=>Taro.navigateTo({url: `/pages/repos/index?url=${encodeURI(item.url)}`})}>
+              <RepoItem item={item} />
+            </View>
           ))
       }
       <LoadMore  status={status} />
