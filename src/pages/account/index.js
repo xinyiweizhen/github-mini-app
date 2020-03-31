@@ -157,7 +157,7 @@ const Index =  ()=> {
           <View className='info-view'>
             {userInfo.bio && <View className='bio'>{userInfo.bio}</View>}
             <View className='item-view'>
-              <View className='item' onClick={()=> Taro.navigateTo({url: `/pages/reposlist/index?url=https://api.github.com/users/fjc0k/repos`})}>
+              <View className='item' onClick={()=> Taro.navigateTo({url: `/pages/reposlist/index?url=https://api.github.com/users/apersonw/repos`})}>
                 <View className='title'>{userInfo && Number(userInfo.public_repos + userInfo.owned_private_repos)}</View>
                 <View className='desc'>Repos</View>
               </View>

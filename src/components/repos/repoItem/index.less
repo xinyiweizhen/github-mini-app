@@ -15,21 +15,23 @@
   .owner-info{
     display: flex;
     align-items: center;
+    .owner-info-name{
+      margin-left: 10px;
+    }
     .avatar{
       width: 50px;
       height: 50px;
-    }
-    .owner-info-name{
-      margin-left: 10px;
     }
   }
   .repo-language{
     display: flex;
     align-items: center;
     color: #7f7f7f;
+    .repo-language-text{
+      margin-left: 8px;
+    }
   }
 }
-
 
 
   .repo-title-view {
@@ -45,23 +47,9 @@
       text-overflow: ellipsis;
     }
   }
-  
-  .fork {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 10px;
-  
-    .fork-title {
-      margin-left: 20px;
-      color: #2d8cf0;
-      font-size: 30px;
-    }
-  }
-  
   .repo-desc {
     color: #7f7f7f;
-    font-size: 30px;
+    font-size: 25px;
     word-wrap: break-word;
   }
   

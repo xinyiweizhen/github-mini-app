@@ -19,7 +19,12 @@ const ListView =  (props)=> {
                     <View className='list-title'>{item.title}</View>
                     <View className='list-content'>
                       { item.tag && <View className='tag'>{item.tag}</View>}
-                      { item.value && <View className='content'>{item.value}</View> }
+                      { item.value && !item.color && <View className='content'>{item.value}</View> }
+                      { item.value && item.color &&  
+                        <View className='content'>
+                          <AtIcon prefixClass='ion' value='ios-radio-button-on' size='16' color={item.color ? item.color : '#7f7f7f'} />
+                          <View className='repo-language-text'>{item.value}</View>
+                        </View> }
                       { item.icon && <AtIcon prefixClass='ion' value='ios-arrow-forward' size='18' color='#7f7f7f' /> }
                     </View>
                 </View>

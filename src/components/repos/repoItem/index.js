@@ -1,10 +1,10 @@
 import Taro from '@tarojs/taro'
-import { View, Text, Button } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import { AtIcon, AtAvatar } from 'taro-ui'
 import { timeago } from '../../../utils/timeago'
 // eslint-disable-next-line import/first
 import PropTypes from 'prop-types'
-import Colors from './colors'
+import { renderLanguageColor } from '../../../utils/renderLanguageInfo'
 import './index.less'
 
 const RepoItem =  (props)=> {
@@ -13,22 +13,13 @@ const RepoItem =  (props)=> {
 
   const update_time =' ' + timeago(Date.parse(new Date(item.updated_at)))
 
-  const renderLanguageColor = ()=>{
-    if(Object.keys(Colors).includes(item.language)){
-      return Colors[item.language]
-    }else{
-      return '#7f7f7f'
-    }
-    
-  }
-
   return (
     <View className='content'>
         <View className='repo-owner'>
           <View className='owner-info'>
             <AtAvatar 
-              className='avatar'
               circle
+              className='avatar'
               size='small'
               image={item.owner ? item.owner.avatar_url : require('../../../assets/images/octocat.png')} 
             />
@@ -37,7 +28,7 @@ const RepoItem =  (props)=> {
           {
             item.language &&
             <View className='repo-language'>
-              <AtIcon prefixClass='ion' value='ios-radio-button-on' size='16' color={renderLanguageColor} />
+              <AtIcon prefixClass='ion' value='ios-radio-button-on' size='16' color={renderLanguageColor(item.language)} />
               <View className='repo-language-text'>{item.language}</View>
             </View>
           }
@@ -64,7 +55,6 @@ const RepoItem =  (props)=> {
           <AtIcon prefixClass='ion' value='ios-trending-up' size='14' color='#ff4949' />
           <View className='update-date'>updated{update_time}</View>
         </View>
-        <Button onClick={()=>renderLanguageColor}>dianji</Button>
       </View>
   )
 }
