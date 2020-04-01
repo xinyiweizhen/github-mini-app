@@ -77,6 +77,7 @@ const Index =  ()=> {
         {
           title: 'Starred Repos',
           icon: true,
+          // GET /users/:username/starred 列出用户star的仓库
           onClick: ()=>{Taro.navigateTo({url: `/pages/reposlist/index?url=/users/${encodeURI(developerInfo.login)}/starred`})}
         }
       ],

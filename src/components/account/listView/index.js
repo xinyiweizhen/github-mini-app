@@ -14,8 +14,8 @@ const ListView =  (props)=> {
       {
         list && list.map((array)=>(
           <View className='list-view' key={array}>
-            { array && array.map((item)=>(
-                <View className='list' key={item.title} onClick={isFunction(item.onClick) ? item.onClick : null}>
+            { array && array.map((item, index)=>(
+                <View className='list' key={index} onClick={isFunction(item.onClick) ? item.onClick : null}>
                     <View className='list-title'>{item.title}</View>
                     <View className='list-content'>
                       { item.tag && <View className='tag'>{item.tag}</View>}

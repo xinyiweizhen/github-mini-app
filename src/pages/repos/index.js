@@ -1,12 +1,13 @@
 import Taro, { useState, useRouter, useEffect, usePullDownRefresh, useReachBottom, useDidShow } from '@tarojs/taro'
-import { View, Text, Navigator, Button } from '@tarojs/components'
+import { View, Text, Navigator } from '@tarojs/components'
 import { AtIcon } from 'taro-ui'
 import request from '../../api/request'
 import ListView from '../../components/account/listView'
-import { REFRESH_STATUS, PRE_PAGE } from '../../constant/global'
+import { REFRESH_STATUS } from '../../constant/global'
 import { HTTP_STATUS } from '../../constant/status'
 import { renderLanguageColor } from '../../utils/renderLanguageInfo'
 import { base64_decode } from '../../utils/base64'
+import { hasLogin } from '../../utils/hasLogin'
 import MarkDown from '../../components/parse/markdown'
 import './index.less'
 
@@ -129,8 +130,12 @@ const Index =  ()=> {
     // }
 
     const [hasStared, setHasStared] = useState(false)
+    const [hasWatched, setHasWatched] = useState(false)
 
-    const [md, setMd ] = useState('')
+
+    const [content, setContent ] = useState('')
+    const [name, setName] = useState('')
+    const [staticLink, setStaticLink] = useState('')
 
 
     useDidShow(()=>{
@@ -148,27 +153,79 @@ const Index =  ()=> {
 
     const getRepoDetails = ()=>{
       Taro.showLoading({title: 'Loading...'})
+      // GET /repos/:owner/:repo
       request.get(decodeURI(url)).then(res=>{
         if (res.statusCode === HTTP_STATUS.SUCCESS){
           setRepo(res.data)
           getReadMe(res.data.full_name)
+          checkStaring(res.data.full_name)
+          checkWatching(res.data.full_name)
         }else{
           Taro.showToast({
             title: res.data.message,
             icon: 'none'
           })
         }
+      }).catch(err=>{
+        Taro.showToast({
+          title: err.errMsg,
+          icon: 'none',
+          success: ()=>{
+            Taro.navigateBack()
+          }
+        }) 
       }).finally(()=>{
         Taro.stopPullDownRefresh()
         Taro.hideLoading()
+        Taro.hideToast()
       })
     }
 
     const getReadMe = (repo_full_name)=>{
       // GET /repos/:owner/:repo/readme
       request.get(`/repos/${repo_full_name}/readme`).then((res)=>{
-        setMd(base64_decode(res.data.content))
+        setContent(base64_decode(res.data.content))
+        setName(res.data.name)
+        setStaticLink(res.data.download_url.replace(/master\/((a-zA-Z0-9)\.(a-zA-Z))$/, ''))
       })
+    }
+
+
+    const checkStaring = (repo_full_name)=>{
+      if(hasLogin()){
+        // GET /user/starred/:owner/:repo
+        request.get(`/user/starred/${repo_full_name}`).then(res=>{
+          setHasStared(res.statusCode === 204)
+        })
+      }
+    }
+
+    const checkWatching = (repo_full_name)=>{
+      if(hasLogin()){
+        request.get(`/repos/${repo_full_name}/subscription`).then(res=>{
+          setHasWatched(res.statusCode === 200)
+        })
+      }
+    }
+
+
+    const handleStarAction = ()=>{
+      const {full_name } =repo
+      if(hasLogin()){
+        if(hasStared){ // 已经star
+          request.delete(`/user/starred/${full_name}`).then(res=>{
+            if(res.statusCode === 204){
+              setHasStared(false)
+            }
+          })
+        }else{
+          request.put(`/user/starred/${full_name}`).then(res=>{
+            if(res.statusCode === 204){
+              setHasStared(true)
+            }
+          })
+        }
+      }
     }
 
     const items = [
@@ -230,14 +287,14 @@ const Index =  ()=> {
       </View>
       <View className='repo-info-view'>
         <View className='repo-star-watch-view'>
-          <View className='repo-star-item' >
-            <AtIcon prefixClass='ion' value='ios-star' size='25' color='#2d8cf0' />
-            <Text className='item-title'>Star</Text>
+          <View className='repo-star-item' onClick={()=>{ handleStarAction() }}>
+            <AtIcon prefixClass='ion' value={hasStared ? 'ios-star-outline' : 'ios-star'} size='25' color='#2d8cf0' />
+            <Text className='item-title'>{hasStared ? 'Unstar' : 'Star'}</Text>
           </View>
           <View className='line' />
           <View className='repo-watch-item'>
-            <AtIcon prefixClass='ion' value='ios-eye' size='25' color='#2d8cf0' />
-            <Text className='item-title'>Watch</Text>
+            <AtIcon prefixClass='ion' value={hasWatched ? 'ios-eye-off' : 'ios-eye'} size='25' color='#2d8cf0' />
+            <Text className='item-title'>{hasWatched ? 'Unwatch' : 'Watch'}</Text>
           </View>
         </View>
         <View className='repo-number-view'>
@@ -245,7 +302,7 @@ const Index =  ()=> {
             <Text className='item-number'>{(repo && repo.stargazers_count) || 0}</Text>
             <Text className='item-title'>Stars</Text>
           </View>
-          <View className='item-content'>
+          <View className='item-content' >
             <Text className='item-number'>{(repo && repo.open_issues_count) || 0}</Text>
             <Text className='item-title'>Issues</Text>
           </View>
@@ -261,14 +318,15 @@ const Index =  ()=> {
       </View>
       <ListView list={items} />
       {
-        md && 
-        <MarkDown content={md} />
+        content && 
+        <MarkDown content={content} name={name} link={staticLink} />
       }
     </View>
   )
 }
 
 Index.config = {
+  navigationBarTitleText: '',
   navigationBarBackgroundColor: '#24292e',
   navigationBarTextStyle: 'white',
   enablePullDownRefresh: true,

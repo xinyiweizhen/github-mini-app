@@ -42,7 +42,7 @@
 .h2w__h1 {
     border-bottom-style: double;
     border-bottom-width: 6rpx;
-    font-size: 42rpx;
+    font-size: 38rpx;
     padding-bottom: 10rpx;
     margin-bottom: 20rpx;
 }
@@ -50,25 +50,25 @@
 .h2w__h2 {
     border-bottom-style: solid;
     border-bottom-width: 1rpx;
-    font-size: 40rpx;
+    font-size: 34rpx;
     padding-bottom: 8rpx;
     margin-bottom: 18rpx;
 }
 
 .h2w__h3 {
-    font-size: 38rpx;
+    font-size: 30rpx;
     padding-bottom: 6rpx;
     margin-bottom: 12rpx;
 }
 
 .h2w__h4 {
-    font-size: 36rpx;
+    font-size: 26rpx;
     padding-bottom: 4rpx;
     margin-bottom: 12rpx;
 }
 
 .h2w__h5 {
-    font-size: 34rpx;
+    font-size: 24rpx;
     padding-bottom: 2rpx;
     margin-bottom: 12rpx;
 }
