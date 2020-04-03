@@ -33,10 +33,13 @@ const MarkDown = (props)=>{
       {
         content ? 
         <View>
-          <View className='title'>
-            <AtIcon prefixClass='ion' value='ios-book' size='25' color='#000' />
-            <Text className='text'>{name}</Text>
-          </View>
+          {
+            name && 
+            <View className='title'>
+              <AtIcon prefixClass='ion' value='ios-book' size='25' color='#000' />
+              <Text className='text'>{name}</Text>
+            </View>
+          }
           <View className='content'>
             <towxml nodes={nodes} />
           </View>
@@ -54,7 +57,8 @@ MarkDown.propTypes = {
   name: PropTypes.string.isRequired
 }
 MarkDown.defaultProps = {
-  content: ''
+  content: '',
+  name: ''
 }
 
 export default MarkDown

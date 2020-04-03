@@ -4,44 +4,90 @@
     align-items: center;
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   }
   
   .title-view {
     display: flex;
-    flex-direction: column;
-    width: 710px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 95vw;
     margin-top: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
     background-color: #fff;
   
     .title {
       color: #24292e;
-      font-size: 34px;
-      margin: 20px 30px;
-      padding-bottom: 20px;
-      border-bottom: 1px dashed #7f7f7f;
+      flex: 1;
+      font-size: 30px;
+      font-weight: bold;
+      margin: 20px;
     }
-  
-    .description {
-      color: #7f7f7f;
-      font-size: 34px;
-      margin: 20px 30px;
+    .number{
+      font-size: 25px;
+      color:#7f7f7f;
     }
+    
   }
   
+
+  .owner-view{
+    display: flex;
+    width: 95vw;
+    justify-content: space-between;
+
+    .owner-info{
+      display: flex;
+      align-items: center;
+      .text{
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+        .time{
+          margin-top: 5px;
+          font-size: 24px;
+          color: #7f7f7f;
+        }
+        .name{
+          font-size: 24px;
+          color:#24292e;
+        }
+      }
+    }
+  }
+.avatar-size{
+  width: 70px;
+  height: 70px;
+  line-height: 60px;
+}
+
+  .description {
+    color: #7f7f7f;
+    font-size: 34px;
+    margin: 20px 30px;
+  }
+
+  .description-view{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    width: 100vw;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);;
+  }
   .markdown {
     display: flex;
     flex-direction: column;
-    width: 690px;
+    width: 95vw;
     background-color: #fff;
-  
-    .md {
-      margin: 20px 20px;
-      width: 670px;
-    }
   }
   
+  .comments-view{
+    margin-top: 10px;
+  }
+
   .add-comment {
     display: flex;
     justify-content: center;

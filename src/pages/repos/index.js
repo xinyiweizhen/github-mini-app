@@ -19,6 +19,8 @@ const Index =  ()=> {
 
     const [repo, setRepo] = useState({})
 
+    const [repoStarCount, setRepoStarCount] = useState(0)
+    const [repoWatchCount, setRepoWatchCount] = useState(0)
 
     // {
     //   "id": 176001214,
@@ -157,6 +159,8 @@ const Index =  ()=> {
       request.get(decodeURI(url)).then(res=>{
         if (res.statusCode === HTTP_STATUS.SUCCESS){
           setRepo(res.data)
+          setRepoStarCount(res.data.stargazers_count)
+          setRepoWatchCount(res.data.subscribers_count)
           getReadMe(res.data.full_name)
           checkStaring(res.data.full_name)
           checkWatching(res.data.full_name)
@@ -186,7 +190,7 @@ const Index =  ()=> {
       request.get(`/repos/${repo_full_name}/readme`).then((res)=>{
         setContent(base64_decode(res.data.content))
         setName(res.data.name)
-        setStaticLink(res.data.download_url.replace(/master\/((a-zA-Z0-9)\.(a-zA-Z))$/, ''))
+        setStaticLink(res.data.download_url.replace(/master\/[a-zA-Z\d]+\/[a-zA-Z\d]+\.[a-zA-Z\d]+/, 'master/'))
       })
     }
 
@@ -201,9 +205,10 @@ const Index =  ()=> {
     }
 
     const checkWatching = (repo_full_name)=>{
+      // GET /user/subscriptions/:owner/:repo
       if(hasLogin()){
-        request.get(`/repos/${repo_full_name}/subscription`).then(res=>{
-          setHasWatched(res.statusCode === 200)
+        request.get(`/user/subscriptions/${repo_full_name}`).then(res=>{
+          setHasWatched(res.statusCode === 204)
         })
       }
     }
@@ -216,12 +221,40 @@ const Index =  ()=> {
           request.delete(`/user/starred/${full_name}`).then(res=>{
             if(res.statusCode === 204){
               setHasStared(false)
+              setRepoStarCount(pre => pre - 1)
             }
           })
         }else{
           request.put(`/user/starred/${full_name}`).then(res=>{
             if(res.statusCode === 204){
               setHasStared(true)
+              setRepoStarCount(pre => pre + 1)
+            }
+          })
+        }
+      }else{
+        Taro.showToast({
+          title: 'Please login in',
+          icon: 'none'
+        })
+      }
+    }
+
+    const handleWatchAction = ()=>{
+      const {full_name } =repo
+      if(hasLogin()){
+        if(hasWatched){
+          request.delete(`/user/subscriptions/${full_name}`).then(res=>{
+            if(res.statusCode === 204){
+              setHasWatched(false)
+              setRepoWatchCount(pre => pre - 1)
+            }
+          })
+        }else{
+          request.put(`/user/subscriptions/${full_name}`).then(res=>{
+            if(res.statusCode === 204){
+              setHasWatched(true)
+              setRepoWatchCount(pre => pre + 1)
             }
           })
         }
@@ -292,17 +325,24 @@ const Index =  ()=> {
             <Text className='item-title'>{hasStared ? 'Unstar' : 'Star'}</Text>
           </View>
           <View className='line' />
-          <View className='repo-watch-item'>
+          <View className='repo-watch-item' onClick={()=>{ handleWatchAction()}}>
             <AtIcon prefixClass='ion' value={hasWatched ? 'ios-eye-off' : 'ios-eye'} size='25' color='#2d8cf0' />
             <Text className='item-title'>{hasWatched ? 'Unwatch' : 'Watch'}</Text>
           </View>
         </View>
-        <View className='repo-number-view'>
-          <View className='item-content'>
-            <Text className='item-number'>{(repo && repo.stargazers_count) || 0}</Text>
+        <View className='repo-number-view' >
+          <View 
+            className='item-content' 
+            onClick={()=>{Taro.navigateTo({url: `/pages/reposuserlist/index?url=${encodeURI(`/repos/${repo.full_name}/stargazers`)}`})}}
+          >
+            {/* GET /repos/:owner/:repo/stargazers  */}
+            <Text className='item-number'>{ repoStarCount || 0}</Text>
             <Text className='item-title'>Stars</Text>
           </View>
-          <View className='item-content' >
+          <View 
+            className='item-content'
+            onClick={()=>{Taro.navigateTo({url: '/pages/issuelist/index?url=' + encodeURI(`/repos/${repo.full_name}/issues`)})}}
+          >
             <Text className='item-number'>{(repo && repo.open_issues_count) || 0}</Text>
             <Text className='item-title'>Issues</Text>
           </View>
@@ -310,8 +350,12 @@ const Index =  ()=> {
             <Text className='item-number'>{(repo && repo.forks_count) || 0}</Text>
             <Text className='item-title'>Forks</Text>
           </View>
-          <View className='item-content'>
-            <Text className='item-number'>{(repo && repo.watchers_count) || 0}</Text>
+          <View 
+            className='item-content' 
+            onClick={()=>{Taro.navigateTo({url: `/pages/reposuserlist/index?url=${encodeURI(`/repos/${repo.full_name}/subscribers`)}`})}}
+          >
+            {/* GET /repos/:owner/:repo/subscribers  */}
+            <Text className='item-number'>{ repoWatchCount || 0}</Text>
             <Text className='item-title'>Watchers</Text>
           </View>
         </View>
@@ -319,7 +363,10 @@ const Index =  ()=> {
       <ListView list={items} />
       {
         content && 
-        <MarkDown content={content} name={name} link={staticLink} />
+        <View className='readme'>
+          <MarkDown content={content} name={name} />
+        </View>
+        
       }
     </View>
   )

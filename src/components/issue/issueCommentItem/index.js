@@ -4,6 +4,8 @@ import { AtAvatar } from 'taro-ui'
 import PropTypes from 'prop-types'
 import './index.less'
 import { timeago } from '../../../utils/timeago'
+import MarkDown from '../../parse/markdown'
+
 
 const IssueCommentItem =  (props)=> {
 
@@ -11,20 +13,17 @@ const IssueCommentItem =  (props)=> {
 
   return (
     <View className='page'>
-      <View className='info-view'>
-          <View className='avatar'>
-            <AtAvatar circle image={item.user.avatar_url} />
-          </View>
-          <View className='text-view'>
-            <Text className='username'>{item.user.login}</Text>
-            <Text className='time'>{`commented ${timeago(Date.parse(new Date(item.created_at)))}`}</Text>
+      <View className='user-info-view'>
+          <View className='user-info'>
+            <AtAvatar className='avatar-size' image={item.user.avatar_url} />
+            <View className='text-view'>
+              <Text className='username'>{item.user.login}</Text>
+              <Text className='time'>{`commented ${timeago(Date.parse(new Date(item.created_at)))}`}</Text>
+            </View>
           </View>
         </View>
         <View className='markdown'>
-          <View className='md'>
-            {/* TODO 解析 */}
-            {/* <Markdown md={item.body} /> */}
-          </View>
+          <MarkDown content={item.body} />
         </View>  
     </View>
   )

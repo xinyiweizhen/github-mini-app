@@ -33,10 +33,12 @@ class App extends Component {
       'pages/login/index',
       'pages/repos/index',
       'pages/reposlist/index',
+      'pages/reposuserlist/index',
       'pages/issue/index',
       'pages/issuelist/index',
       'pages/follow/index',
       'pages/developerInfo/index',
+      'pages/search/index',
     ],
     tabBar: {
       list: [
@@ -45,6 +47,12 @@ class App extends Component {
           pagePath: 'pages/index/index',
           iconPath: './assets/images/tab-trending.png',
           selectedIconPath: './assets/images/tab-trending-s.png'
+        },
+        {
+          text: 'Search',
+          pagePath: 'pages/search/index',
+          iconPath: './assets/images/tab-search.png',
+          selectedIconPath: './assets/images/tab-search-s.png'
         },
         {
           text: 'Me',

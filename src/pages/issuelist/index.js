@@ -1,4 +1,4 @@
-import Taro, { useState, useRouter, useEffect, usePullDownRefresh, useReachBottom, useDidShow } from '@tarojs/taro'
+import Taro, { useState, useRouter, useEffect, usePullDownRefresh, useReachBottom, usePageScroll } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import LoadMore from '../../components/common/loadMore'
 import IssuesList from '../../components/issue/issuesList'
@@ -30,6 +30,11 @@ const Index =  ()=> {
   useEffect(()=>{
     getClosedIssues()
   }, [closePage])
+
+
+  usePageScroll(res=>{
+    console.log(res.scrollTop)
+  })
 
   // 下拉刷新
   usePullDownRefresh(()=>{
@@ -104,7 +109,8 @@ const Index =  ()=> {
 }
 
 Index.config = {
-  navigationBarBackgroundColor: '#ffffff',
+  navigationBarTitleText: '',
+  navigationBarBackgroundColor: '#24292e',
   navigationBarTextStyle: 'white',
   enablePullDownRefresh: true,
 }

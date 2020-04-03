@@ -3,7 +3,11 @@ import { View, Text } from '@tarojs/components'
 import IssueCommentItem from '../../components/issue/issueCommentItem'
 import request from '../../api/request'
 import { REFRESH_STATUS, PRE_PAGE } from '../../constant/global'
+import { timeago } from '../../utils/timeago'
 import './index.less'
+// eslint-disable-next-line import/first
+import { AtAvatar } from 'taro-ui'
+import MarkDown from '../../components/parse/markdown'
 
 
 const Index =  ()=> {
@@ -54,13 +58,28 @@ const Index =  ()=> {
   return (
     <View className='page'>
         <View className='title-view'>
-          <Text className='title'>{ Object.keys(issueInfo).length > 0  && `#${issueInfo.number} ${issueInfo.title}`}</Text>
-          {
+          <Text className='title'>{ issueInfo.title || 'none title'}</Text>
+          <Text className='number'>{`#${issueInfo.number}` || '' }</Text>
+        </View>
+        <View className='owner-view'>
+          <View className='owner-info'>
+            <AtAvatar 
+              className='avatar-size'
+              size='small'
+              image={issueInfo.user && issueInfo.user.avatar_url}
+            />
+            <View className='text'>
+              <Text className='name'>{issueInfo.user.login || 'none'}</Text>
+              <Text className='time'>{ issueInfo && timeago(Date.parse(new Date(issueInfo.created_at))) || 'none'}</Text>
+            </View>
+          </View>
+          <View className='opration'></View>
+        </View>
+        <View className='description-view'>
+        {
             issueInfo.body ? (
               <View className='markdown'>
-                <View className='md'>
-                  
-                </View>
+                  <MarkDown content={issueInfo.body} />
               </View>
             ) : (
               <Text className='description'>
@@ -69,6 +88,7 @@ const Index =  ()=> {
             )
           }
         </View>
+        <View className='comments-view'>
         {
           issueCommentList.map((item, index) => {
             return (
@@ -76,6 +96,7 @@ const Index =  ()=> {
             )
           })
         }
+        </View>
     </View>
   )
 }
