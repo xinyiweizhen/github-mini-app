@@ -1,4 +1,4 @@
-import Taro, { useState, updateShareMenu } from '@tarojs/taro'
+import Taro, { useState, useEffect } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import SearchBar from '../../components/search/searchbar'
 import SearchHistory from '../../components/search/searchhistory'
@@ -10,14 +10,26 @@ const Index =  ()=> {
   const [searchHistory, setSearchHistory] = useState([])
 
 
+  useEffect(()=>{
+    loadSearchHistory()
+  }, [])
+
   /**
    * 加载搜索历史列表数据
    */
   const loadSearchHistory = ()=>{
-    Taro.getStorageSync({
+    Taro.getStorage({
         key: 'search_history',
         success: (res)=>{
+          if (res.data.length > 0) {
             setSearchHistory([...res.data])
+          }
+        },
+        fail: ()=>{
+          Taro.setStorage({
+            key: 'search_history',
+            value: ''
+          })
         }
     })
   }
@@ -29,9 +41,12 @@ const Index =  ()=> {
    */
   const updateSearchHistory = (value)=>{
     let array = [...searchHistory]
-    array.splice(array.findIndex(item => item === value), 1)
+    const index = array.findIndex(item => item === value)
+    if(index >0 ){
+      array.splice(index, 1)
+    }
     array.unshift(value)
-    Taro.setStorageSync({
+    Taro.setStorage({
         key: 'search_history',
         data: array,
         success: ()=>{
@@ -56,8 +71,10 @@ const Index =  ()=> {
   const onClickSearch = (e)=>{
     const value = e.target.value
     if(value){
-        updateSearchHistory(String(value).trim())
-        // TODO 跳转搜索结果页
+        updateSearchHistory(value)
+        Taro.navigateTo({
+          url: `/pages/searchResult/index?keyword=${encodeURI(value)}`
+        })
     }else{
         Taro.showToast({
             title: 'Please input content',
@@ -66,8 +83,11 @@ const Index =  ()=> {
     }
   }
 
-  const onTagClick = ()=>{
-      
+  const onTagClick = ({name})=>{
+      updateSearchHistory(name)
+      Taro.navigateTo({
+        url: `/pages/searchResult/index?keyword=${encodeURI(name)}`
+      })
   }
 
   return (
@@ -81,7 +101,7 @@ const Index =  ()=> {
             <View className='search-history'>
               <SearchHistory items={searchHistory} onTagClick={onTagClick} />
             </View>
-            <View className='clear' >Clear All</View>
+            <View className='clear' onClick={clearSearchHistory}>Clear All</View>
           </View>
         }
     </View>

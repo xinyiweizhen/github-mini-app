@@ -12,8 +12,8 @@ const ListView =  (props)=> {
   return (
     <View>
       {
-        list && list.map((array)=>(
-          <View className='list-view' key={array}>
+        list && list.map((array, i)=>(
+          <View className='list-view' key={i} >
             { array && array.map((item, index)=>(
                 <View className='list' key={index} onClick={isFunction(item.onClick) ? item.onClick : null}>
                     <View className='list-title'>{item.title}</View>

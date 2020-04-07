@@ -1,8 +1,9 @@
 import Taro, { useState, useRouter, useEffect, usePullDownRefresh, useReachBottom, useDidShow } from '@tarojs/taro'
 import { View, Text, Navigator } from '@tarojs/components'
-import { AtIcon } from 'taro-ui'
+import { AtIcon, AtActivityIndicator } from 'taro-ui'
 import request from '../../api/request'
 import ListView from '../../components/account/listView'
+import Loading from '../../components/common/loading'
 import { REFRESH_STATUS } from '../../constant/global'
 import { HTTP_STATUS } from '../../constant/status'
 import { renderLanguageColor } from '../../utils/renderLanguageInfo'
@@ -10,6 +11,7 @@ import { base64_decode } from '../../utils/base64'
 import { hasLogin } from '../../utils/hasLogin'
 import MarkDown from '../../components/parse/markdown'
 import './index.less'
+import ActivityLoading from '../../components/common/activityloading'
 
 
 const Index =  ()=> {
@@ -139,6 +141,8 @@ const Index =  ()=> {
     const [name, setName] = useState('')
     const [staticLink, setStaticLink] = useState('')
 
+    const [staring, setStaring] = useState(false)
+    const [watching, setWatching] = useState(false)
 
     useDidShow(()=>{
       getRepoDetails()
@@ -190,7 +194,7 @@ const Index =  ()=> {
       request.get(`/repos/${repo_full_name}/readme`).then((res)=>{
         setContent(base64_decode(res.data.content))
         setName(res.data.name)
-        setStaticLink(res.data.download_url.replace(/master\/[a-zA-Z\d]+\/[a-zA-Z\d]+\.[a-zA-Z\d]+/, 'master/'))
+        // setStaticLink(res.data.download_url.replace(/master\/[a-zA-Z\d]+\/[a-zA-Z\d]+\.[a-zA-Z\d]+/, 'master/'))
       })
     }
 
@@ -217,12 +221,15 @@ const Index =  ()=> {
     const handleStarAction = ()=>{
       const {full_name } =repo
       if(hasLogin()){
+        setStaring(true)
         if(hasStared){ // 已经star
           request.delete(`/user/starred/${full_name}`).then(res=>{
             if(res.statusCode === 204){
               setHasStared(false)
               setRepoStarCount(pre => pre - 1)
             }
+          }).finally(()=>{
+            setStaring(false)
           })
         }else{
           request.put(`/user/starred/${full_name}`).then(res=>{
@@ -230,6 +237,8 @@ const Index =  ()=> {
               setHasStared(true)
               setRepoStarCount(pre => pre + 1)
             }
+          }).finally(()=>{
+            setStaring(false)
           })
         }
       }else{
@@ -243,12 +252,15 @@ const Index =  ()=> {
     const handleWatchAction = ()=>{
       const {full_name } =repo
       if(hasLogin()){
+        setWatching(true)
         if(hasWatched){
           request.delete(`/user/subscriptions/${full_name}`).then(res=>{
             if(res.statusCode === 204){
               setHasWatched(false)
               setRepoWatchCount(pre => pre - 1)
             }
+          }).finally(()=>{
+            setWatching(false)
           })
         }else{
           request.put(`/user/subscriptions/${full_name}`).then(res=>{
@@ -256,6 +268,8 @@ const Index =  ()=> {
               setHasWatched(true)
               setRepoWatchCount(pre => pre + 1)
             }
+          }).finally(()=>{
+            setWatching(false)
           })
         }
       }
@@ -321,13 +335,27 @@ const Index =  ()=> {
       <View className='repo-info-view'>
         <View className='repo-star-watch-view'>
           <View className='repo-star-item' onClick={()=>{ handleStarAction() }}>
-            <AtIcon prefixClass='ion' value={hasStared ? 'ios-star-outline' : 'ios-star'} size='25' color='#2d8cf0' />
-            <Text className='item-title'>{hasStared ? 'Unstar' : 'Star'}</Text>
+            {
+              staring ? 
+              <ActivityLoading size='21' color='#999' text={hasStared ? 'Unstar' : 'Star'} />
+              :
+              <View>
+                <AtIcon prefixClass='ion' value={hasStared ? 'ios-star-outline' : 'ios-star'} size='25' color='#2d8cf0' />
+                <Text className='item-title'>{hasStared ? 'Unstar' : 'Star'}</Text>
+              </View>
+            }
           </View>
           <View className='line' />
           <View className='repo-watch-item' onClick={()=>{ handleWatchAction()}}>
-            <AtIcon prefixClass='ion' value={hasWatched ? 'ios-eye-off' : 'ios-eye'} size='25' color='#2d8cf0' />
-            <Text className='item-title'>{hasWatched ? 'Unwatch' : 'Watch'}</Text>
+            {
+              watching ? 
+              <ActivityLoading size='21' color='#999' text={hasWatched ? 'Unwatch' : 'Watch'} />
+              :
+              <View>
+                <AtIcon prefixClass='ion' value={hasWatched ? 'ios-eye-off' : 'ios-eye'} size='25' color='#2d8cf0' />
+                <Text className='item-title'>{hasWatched ? 'Unwatch' : 'Watch'}</Text>
+              </View>
+            }
           </View>
         </View>
         <View className='repo-number-view' >

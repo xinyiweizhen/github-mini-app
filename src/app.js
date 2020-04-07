@@ -39,6 +39,7 @@ class App extends Component {
       'pages/follow/index',
       'pages/developerInfo/index',
       'pages/search/index',
+      'pages/searchResult/index',
     ],
     tabBar: {
       list: [

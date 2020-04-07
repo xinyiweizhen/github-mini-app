@@ -151,6 +151,7 @@ const Index =  ()=> {
 }
 
 Index.config = {
+  navigationBarTitleText: 'Me',
   navigationBarBackgroundColor: '#24292e',
   navigationBarTextStyle: 'white',
   enablePullDownRefresh: true

@@ -4,8 +4,9 @@ import LoadMore from '../../components/common/loadMore'
 import IssuesList from '../../components/issue/issuesList'
 import request from '../../api/request'
 import { REFRESH_STATUS, PRE_PAGE } from '../../constant/global'
-import './index.less'
 import Tabs from '../../components/common/tabs'
+import './index.less'
+
 
 
 const Index =  ()=> {

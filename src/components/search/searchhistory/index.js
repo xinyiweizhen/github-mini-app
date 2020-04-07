@@ -14,7 +14,7 @@ const SearchHistory = (props)=>{
         {
             items && items.map((value)=>(
                 <View key={value} className='tag-item'>
-                    <AtTag circle active onClick={onTagClick} name={value}>{value}</AtTag>
+                    <AtTag size='small'  circle active onClick={onTagClick} name={value}>{value}</AtTag>
                 </View>
             ))
         }
