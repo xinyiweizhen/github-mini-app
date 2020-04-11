@@ -14,7 +14,7 @@ const RepoItem =  (props)=> {
   const update_time =' ' + timeago(Date.parse(new Date(item.updated_at)))
 
   return (
-    <View className='content'>
+    <View className='content' onClick={()=>Taro.navigateTo({url: `/pages/repos/index?url=${encodeURI(item.url)}`})}>
         <View className='repo-owner'>
           <View className='owner-info'>
             <AtAvatar 

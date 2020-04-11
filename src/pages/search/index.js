@@ -42,7 +42,7 @@ const Index =  ()=> {
   const updateSearchHistory = (value)=>{
     let array = [...searchHistory]
     const index = array.findIndex(item => item === value)
-    if(index >0 ){
+    if(index >= 0 ){
       array.splice(index, 1)
     }
     array.unshift(value)
